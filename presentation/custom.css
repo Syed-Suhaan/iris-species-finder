@@ -1,27 +1,16 @@
-.reveal h1,
-.reveal h2,
-.reveal h3 {
-  color: #2b6a4f;
-  font-weight: 700;
+article h2,
+hgroup h1 {
+  color: #2b6a4f !important;
 }
 
-.reveal p,
-.reveal li {
-  font-size: 90%;
+hgroup h2 {
+  color: #0072b2 !important;
 }
 
-.reveal li {
-  margin-bottom: 0.35em;
-}
-
-.reveal pre code {
-  font-size: 75%;
-}
-
-.reveal strong {
+article strong {
   color: #0072b2;
 }
 
-.reveal a {
-  color: #e69f00;
+article a {
+  color: #d55e00;
 }
