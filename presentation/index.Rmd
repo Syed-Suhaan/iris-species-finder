@@ -13,7 +13,7 @@ mode        : selfcontained
 ## Which iris is it?
 
 ```{r setup, include=FALSE}
-app_url  <- "https://YOUR-ACCOUNT.shinyapps.io/irisfinder/"
+app_url  <- "https://suhaans.shinyapps.io/irisfinder/"
 repo_url <- "https://github.com/Syed-Suhaan/iris-species-finder"
 ```
 

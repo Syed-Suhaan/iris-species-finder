@@ -4,6 +4,8 @@ A small Shiny app that names an iris flower (setosa, versicolor or virginica) fr
 
 The app uses k-nearest neighbours, written in base R, on R's built-in `iris` data. The user moves four sliders and sees the predicted species, a vote table, a plot with the closest flowers circled, and a leave-one-out accuracy figure. A Documentation tab inside the app explains every control.
 
+Live app: <https://suhaans.shinyapps.io/irisfinder/>
+
 Pitch deck: <https://syed-suhaan.github.io/iris-species-finder/>
 
 ## Layout
@@ -34,7 +36,7 @@ shiny::runApp("irisfinder")
    rsconnect::deployApp("irisfinder")
    ```
 
-4. The app lives at `https://<account>.shinyapps.io/irisfinder/`.
+4. The app lives at `https://<account>.shinyapps.io/irisfinder/`. The deployed copy is at the link above.
 
 ## Rebuild the deck
 
