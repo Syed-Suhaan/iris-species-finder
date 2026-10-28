@@ -1,0 +1,16 @@
+article h2,
+hgroup h1 {
+  color: #2b6a4f !important;
+}
+
+hgroup h2 {
+  color: #0072b2 !important;
+}
+
+article strong {
+  color: #0072b2;
+}
+
+article a {
+  color: #d55e00;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Iris Species Finder</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Iris Species Finder">
+  <meta name="author" content="Syed Suhaan">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="libraries/jquery.js"></script>
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+<style>
+article h2,
+hgroup h1 {
+  color: #2b6a4f !important;
+}
+
+hgroup h2 {
+  color: #0072b2 !important;
+}
+
+article strong {
+  color: #0072b2;
+}
+
+article a {
+  color: #d55e00;
+}
+</style>
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  
+  <hgroup class="auto-fadein">
+    <h1>Iris Species Finder</h1>
+    <h2>A Shiny app that names an iris flower from four measurements</h2>
+    <p>Syed Suhaan<br/>Developing Data Products, course project</p>
+  </hgroup>
+  
+  <article></article>  
+  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  
+  <article data-timings="">
+    <h2 id="which-iris-is-it">Which iris is it?</h2>
+<p>Three iris species look alike. Botanists separate them by measuring <strong>petals and sepals</strong>.</p>
+<p>R ships with 150 labelled flowers. Their average measurements, computed live for this slide:</p>
+<pre><code class="language-r">aggregate(. ~ Species, data = iris, FUN = mean)
+</code></pre>
+<pre><code>##      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     setosa        5.006       3.428        1.462       0.246
+## 2 versicolor        5.936       2.770        4.260       1.326
+## 3  virginica        6.588       2.974        5.552       2.026
+</code></pre>
+<p>The averages differ, but individual flowers overlap. A guess needs a method.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  
+  <article data-timings="">
+    <h2 id="how-the-app-decides">How the app decides</h2>
+<p>The method is <strong>k-nearest neighbours</strong>: measure the distance to all 150 known flowers, keep the <strong>k</strong> closest, and let them vote.</p>
+<pre><code class="language-r">z &lt;- scale(iris[, 1:4])   # one common scale for all four measurements
+knn_guess &lt;- function(d, k) {
+  nearest &lt;- as.character(iris$Species[order(d)[1:k]])
+  votes &lt;- table(nearest)
+  tied &lt;- names(votes)[votes == max(votes)]
+  nearest[nearest %in% tied][1]
+}
+new_flower &lt;- (c(5.9, 2.8, 4.5, 1.4) - attr(z, &quot;scaled:center&quot;)) / attr(z, &quot;scaled:scale&quot;)
+d &lt;- sqrt(rowSums(sweep(z, 2, new_flower)^2))
+knn_guess(d, k = 7)
+</code></pre>
+<pre><code>## [1] &quot;versicolor&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  
+  <article data-timings="">
+    <h2 id="does-it-work">Does it work?</h2>
+<p><img src="data:image/png;base64,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" alt="plot of chunk loo" /></p>
+<p>Hide each known flower in turn and guess it from the other 149. At the app’s default of k = 7 that is right <strong>96.0%</strong> of the time. The best k tested is <strong>12</strong> at 96.7%.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  
+  <article data-timings="">
+    <h2 id="what-you-can-do-in-the-app">What you can do in the app</h2>
+<ul>
+<li>Move four <strong>sliders</strong>, or load a typical flower of each species.</li>
+<li>See the predicted species update as you drag.</li>
+<li>Watch the <strong>vote table</strong> and a plot with the k closest flowers circled.</li>
+<li>Change <strong>k</strong> and the scaling option, and see the accuracy check respond.</li>
+<li>Read the built-in <strong>Documentation</strong> tab. No R knowledge needed.</li>
+</ul>
+<p>Try it: <a href="https://YOUR-ACCOUNT.shinyapps.io/irisfinder/">https://YOUR-ACCOUNT.shinyapps.io/irisfinder/</a></p>
+<p>Code: <a href="https://github.com/Syed-Suhaan/iris-species-finder">https://github.com/Syed-Suhaan/iris-species-finder</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1>
+         1
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2>
+         2
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3>
+         3
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4>
+         4
+      </a>
+    </li>
+    
+    </ul>
+  </div>  
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
