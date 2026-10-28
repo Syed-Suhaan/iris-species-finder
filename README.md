@@ -45,4 +45,4 @@ install.packages("remotes")
 remotes::install_github(c("ramnathv/slidifyLibraries", "ramnathv/slidify"))
 ```
 
-Copy `presentation/` to a scratch folder, run `Rscript build.R` there, and put `index.html`, `libraries/` and `assets/` on the `gh-pages` branch next to an empty `.nojekyll` file. `slidify` 0.5 predates `markdown` 1.0, so `build.R` swaps two of its internals and replaces its http jQuery link with a bundled copy.
+Copy `presentation/` to a scratch folder, run `Rscript build.R` there, and put `index.html`, `libraries/` and `assets/` on the `gh-pages` branch next to an empty `.nojekyll` file. `slidify` 0.5 predates `markdown` 1.0, so `build.R` swaps two of its internals, bundles jQuery and switches the font link to https so the deck loads on an https page.

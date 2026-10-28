@@ -12,8 +12,13 @@ if (!exists("markdownExtensions", envir = asNamespace("markdown"))) {
 
 slidify::slidify("index.Rmd")
 
-# The io2012 template loads jQuery from an http CDN, which https pages block, and ships
-# a dead Chrome Frame snippet. Serve jQuery from libraries/ instead.
+# The io2012 template loads jQuery and its Google Fonts over http, which https pages block, and
+# ships a dead Chrome Frame snippet. Serve jQuery from libraries/ and fetch the fonts over https.
+slidify_css <- "libraries/frameworks/io2012/css/slidify.css"
+writeLines(
+  sub("http://fonts.googleapis.com", "https://fonts.googleapis.com", readLines(slidify_css, warn = FALSE), fixed = TRUE),
+  slidify_css, useBytes = TRUE
+)
 file.copy(
   system.file("libraries/widgets/quiz/js/jquery.js", package = "slidifyLibraries"),
   "libraries/jquery.js", overwrite = TRUE
