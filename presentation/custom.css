@@ -1,0 +1,27 @@
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #2b6a4f;
+  font-weight: 700;
+}
+
+.reveal p,
+.reveal li {
+  font-size: 90%;
+}
+
+.reveal li {
+  margin-bottom: 0.35em;
+}
+
+.reveal pre code {
+  font-size: 75%;
+}
+
+.reveal strong {
+  color: #0072b2;
+}
+
+.reveal a {
+  color: #e69f00;
+}

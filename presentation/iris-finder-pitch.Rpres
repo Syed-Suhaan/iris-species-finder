@@ -1,0 +1,82 @@
+Iris Species Finder
+========================================================
+author: Syed Suhaan
+date: October 28, 2026
+autosize: true
+transition: fade
+css: custom.css
+
+A Shiny app that names an iris flower from four measurements.
+
+Developing Data Products, course project
+
+```{r setup, include=FALSE}
+app_url  <- "https://YOUR-ACCOUNT.shinyapps.io/irisfinder/"
+repo_url <- "https://github.com/Syed-Suhaan/iris-species-finder"
+```
+
+Which iris is it?
+========================================================
+
+Three iris species look alike. Botanists separate them by measuring **petals and sepals**.
+
+R ships with 150 labelled flowers. Their average measurements, computed live for this slide:
+
+```{r averages}
+aggregate(. ~ Species, data = iris, FUN = mean)
+```
+
+The averages differ, but individual flowers overlap. A guess needs a method.
+
+How the app decides
+========================================================
+
+The method is **k-nearest neighbours**.
+
+- Measure the distance from your flower to all 150 known flowers.
+- Keep the **k** closest ones.
+- Let them vote. The majority species is the answer.
+
+```{r knn}
+z <- scale(iris[, 1:4])   # one common scale for all four measurements
+knn_guess <- function(d, k) {
+  nearest <- as.character(iris$Species[order(d)[1:k]])
+  votes <- table(nearest)
+  tied <- names(votes)[votes == max(votes)]
+  nearest[nearest %in% tied][1]
+}
+new_flower <- (c(5.9, 2.8, 4.5, 1.4) - attr(z, "scaled:center")) / attr(z, "scaled:scale")
+d <- sqrt(rowSums(sweep(z, 2, new_flower)^2))
+knn_guess(d, k = 7)
+```
+
+Does it work?
+========================================================
+
+```{r loo, echo=FALSE, fig.width=9, fig.height=4.2}
+dm <- as.matrix(dist(z)); diag(dm) <- Inf
+acc <- sapply(1:25, function(k) {
+  mean(sapply(1:150, function(i) knn_guess(dm[i, ], k) == as.character(iris$Species[i])))
+})
+par(mar = c(4.5, 4.5, 1, 1))
+plot(1:25, 100 * acc, type = "b", pch = 19, col = "#2b6a4f", las = 1,
+     xlab = "k, the number of neighbours asked", ylab = "Correct guesses (%)")
+abline(v = 7, lty = 2, col = "grey50")
+```
+
+Hide each known flower in turn and guess it from the other 149.
+At the app's default of k = 7 that is right **`r sprintf("%.1f", 100 * acc[7])`%** of the time.
+The best k tested is **`r which.max(acc)`** at `r sprintf("%.1f", 100 * max(acc))`%.
+
+What you can do in the app
+========================================================
+
+- Move four **sliders** or load a typical flower of each species.
+- See the predicted species update as you drag.
+- Watch the **vote table** and a plot with the k closest flowers circled.
+- Change **k** and the scaling option, and see the accuracy check respond.
+- Read the built-in **Documentation** tab. No R knowledge needed.
+
+Try it: `r app_url`
+
+Code: `r repo_url`
